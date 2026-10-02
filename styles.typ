@@ -11,7 +11,8 @@
   "bill-wavy", "bill-diploma", "bill-lattice", "bill-weave",
   "airmail", "checker", "stars", "hearts", "eggdart", "vitruvian", "arches", "tapa", "stripes", "herringbone",
   "knot-cartouche", "knot-eights", "knot-lozenge", "knot-ring", "daisy", "sakura", "lotus", "palmette", "ogee", "rinceau", "girih", "hexastar", "strap", "certificate", "certificate-ribbon", "stepped", "deckle", "label", "diamond-chain", "lace-grid", "diploma-shell", "medallion", "rosette-ribbon", "fleur-edge", "filigree",
-  "knot-rope", "knot-triple", "knot-weave", "knot-blocks")
+  "knot-rope", "knot-triple", "knot-weave", "knot-blocks",
+  "dedication", "plank", "torn", "coil")
 
 #let _bands = (classic: 6.5mm, celtic: 6.5mm, braid: 7mm, chain: 6.5mm, arabesque: 7mm, islamic: 6.5mm, greek: 6mm, scallop: 6.5mm,
   deco: 5.5mm, braces: 7mm, pearls: 5mm, guilloche: 6.5mm, banknote: 6.5mm,
@@ -22,7 +23,8 @@
   airmail: 5.5mm, checker: 5.5mm, stars: 6.5mm, hearts: 6.5mm, eggdart: 7mm, vitruvian: 7mm, arches: 7.5mm, tapa: 6.5mm, stripes: 5.5mm, herringbone: 6mm,
   "knot-cartouche": 7mm, "knot-eights": 7mm, "knot-lozenge": 7mm, "knot-ring": 7mm, daisy: 7mm, sakura: 7mm, lotus: 7mm, palmette: 7mm, ogee: 7mm, rinceau: 7mm,
   girih: 6.5mm, hexastar: 6.5mm, strap: 6.5mm, certificate: 7.5mm, "certificate-ribbon": 7.5mm, stepped: 7mm, deckle: 6.5mm, label: 5.5mm, "diamond-chain": 6.5mm, "lace-grid": 6.5mm, "diploma-shell": 7mm, medallion: 7mm, "rosette-ribbon": 7mm, "fleur-edge": 7mm, filigree: 7mm,
-  "knot-rope": 7mm, "knot-triple": 7mm, "knot-weave": 7mm, "knot-blocks": 7mm)
+  "knot-rope": 7mm, "knot-triple": 7mm, "knot-weave": 7mm, "knot-blocks": 7mm,
+  dedication: 7mm, plank: 6mm, torn: 7mm, coil: 7mm)
 
 #let _defaults = (
   style: "classic",
@@ -42,6 +44,7 @@
   seal: false,             // a guilloché seal (rosette) in the bottom-right corner of the page
   corners: true,           // corner ornaments (false: the continuous contour only)
   corner-color: auto,      // colour of the corner ornaments of the bill-* styles (auto: a lighter accent)
+  binding: "left",         // coil only: side of the wire rings ("left", "right", "top", "bottom", "none")
 )
 
 #let _cfg(style, opts) = {
@@ -1587,6 +1590,177 @@
   items
 }
 
+// ── 0.3.0: dedication, plank, torn, coil — "paper and craft" frames
+
+// dedication: triple rule, a row of diamonds between the rules, an eight-petal rosette in every corner and in the middle of every side
+#let _dedication(c, w, h) = {
+  let (B, m) = (_pt(c.band), _pt(c.inset))
+  let lw = _pt(c.line)
+  let rr(a, rad) = nib.round-corners(((a * 1pt, a * 1pt), ((w - a) * 1pt, a * 1pt), ((w - a) * 1pt, (h - a) * 1pt), (a * 1pt, (h - a) * 1pt)), r: rad * 1pt, cycle: true)
+  let pale = c.accent.lighten(45%)
+  let items = _stroke(rr(m, B * 0.2), lw * 1.5, c.ink)
+  items += _stroke(rr(m + 0.16 * B, B * 0.12), lw * 1.0, c.accent)
+  items += _stroke(rr(m + B, B * 0.12), lw * 1.0, c.accent)
+  items += _stroke(rr(m + 0.84 * B, B * 0.1), lw * 0.6, pale)
+  let rosette(cx, cy, R, col1, col2) = {
+    let pl = path => nib.transformed(path, 1, 0, 0, 1, e: cx * 1pt, f: cy * 1pt)
+    let its = ()
+    for k in range(8) {
+      let a = k * 45deg
+      its += _petal(c, pl, _leaf(0.16 * R * calc.cos(a), 0.16 * R * calc.sin(a), (if calc.even(k) { 1.0 } else { 0.72 }) * R, 0.2 * R, a), if calc.even(k) { col1 } else { col2 })
+    }
+    its + _disc(c, pl, 0, 0, 0.16 * R, c.ink)
+  }
+  let sprig(cx, cy, sx, sy, ang) = {
+    // pairs of leaves opening away from the corner rosette, along one side
+    let pl = path => nib.transformed(path, sx, 0, 0, sy, e: cx * 1pt, f: cy * 1pt)
+    let r = ()
+    for (u, len, sp) in ((1.45, 0.62, 38deg), (2.2, 0.5, 30deg)) {
+      for sgn in (1, -1) {
+        let a = sgn * sp
+        let lf = if ang == 0 { _leaf(u * B, 0, len * B, 0.12 * B, a) } else { _leaf(0, u * B, len * B, 0.12 * B, 90deg - a) }
+        r += _petal(c, pl, lf, c.color)
+      }
+    }
+    r
+  }
+  let step = 0.62 * B
+  let diamonds(x0, y0, tx, ty, len) = {
+    let n = int(calc.floor(len / step))
+    let its = ()
+    for i in range(if len > 0 { n } else { 0 }) {
+      let u = (i + 0.5) * len / n
+      let (cx, cy) = (x0 + tx * u, y0 + ty * u)
+      let d = 0.13 * B
+      let pts = ((cx - d, cy), (cx, cy - d), (cx + d, cy), (cx, cy + d))
+      its += (nib.mp-fill(_poly(pts, cycle: true), fill: if calc.even(i) { c.color } else { c.accent }),)
+    }
+    its
+  }
+  let k = m + B / 2
+  let skip = 3.0 * B
+  let mid = 1.0 * B
+  // each half of a side is the mirror image of the other half
+  items += diamonds(k + skip, k, 1, 0, w / 2 - mid - k - skip) + diamonds(w - k - skip, k, -1, 0, w / 2 - mid - k - skip)
+  items += diamonds(k + skip, h - k, 1, 0, w / 2 - mid - k - skip) + diamonds(w - k - skip, h - k, -1, 0, w / 2 - mid - k - skip)
+  items += diamonds(k, k + skip, 0, 1, h / 2 - mid - k - skip) + diamonds(k, h - k - skip, 0, -1, h / 2 - mid - k - skip)
+  items += diamonds(w - k, k + skip, 0, 1, h / 2 - mid - k - skip) + diamonds(w - k, h - k - skip, 0, -1, h / 2 - mid - k - skip)
+  if c.corners {
+    for (cx, cy, sx, sy) in ((k, k, 1, 1), (w - k, k, -1, 1), (w - k, h - k, -1, -1), (k, h - k, 1, -1)) {
+      items += sprig(cx, cy, sx, sy, 0) + sprig(cx, cy, sx, sy, 1)
+    }
+    for (cx, cy) in ((k, k), (w - k, k), (w - k, h - k), (k, h - k)) { items += rosette(cx, cy, 0.62 * B, c.color, c.accent) }
+    for (cx, cy) in ((w / 2, k), (w / 2, h - k), (k, h / 2), (w - k, h / 2)) { items += rosette(cx, cy, 0.5 * B, c.accent, c.color) }
+  }
+  items
+}
+
+// a quadrilateral board with grain lines (a, b: outer edge; d, e: inner edge, a→d and b→e are the mitres)
+#let _board(c, a, b, e, d, fillc, grain, seed) = {
+  let lw = _pt(c.line)
+  let lerp(p, q, t) = (p.at(0) + (q.at(0) - p.at(0)) * t, p.at(1) + (q.at(1) - p.at(1)) * t)
+  let items = (nib.mp-fill(_poly((a, b, e, d), cycle: true), fill: fillc),)
+  let n = 3
+  for j in range(n) {
+    let f = (j + 1) / (n + 1)
+    let pts = range(21).map(i => {
+      let t = i / 20
+      let p = lerp(lerp(a, b, t), lerp(d, e, t), f)
+      let (nx, ny) = (d.at(0) - a.at(0), d.at(1) - a.at(1))
+      let wob = 0.05 * calc.sin(t * (5 + 2 * j) + seed + j * 1.7) + 0.03 * calc.sin(t * 13 + seed * 2)
+      (p.at(0) + nx * wob, p.at(1) + ny * wob)
+    })
+    items += _stroke(_ell(pts), lw * 0.7, grain)
+  }
+  items + _stroke(_poly((a, b, e, d), cycle: true), lw * 1.3, c.ink)
+}
+
+// plank: four mitred boards with grain and a nail in every corner (a picture frame made of planks)
+#let _plank(c, w, h) = {
+  let (B, m) = (_pt(c.band), _pt(c.inset))
+  let lw = _pt(c.line)
+  let wood = c.accent.lighten(30%)
+  let grain = c.accent.darken(25%)
+  let (X0, Y0, X1, Y1) = (m, m, w - m, h - m)
+  let items = ()
+  items += _board(c, (X0, Y0), (X1, Y0), (X1 - B, Y0 + B), (X0 + B, Y0 + B), wood, grain, 1.0)
+  items += _board(c, (X0, Y1), (X1, Y1), (X1 - B, Y1 - B), (X0 + B, Y1 - B), wood, grain, 1.0)
+  items += _board(c, (X0, Y0), (X0, Y1), (X0 + B, Y1 - B), (X0 + B, Y0 + B), wood.darken(6%), grain, 2.3)
+  items += _board(c, (X1, Y0), (X1, Y1), (X1 - B, Y1 - B), (X1 - B, Y0 + B), wood.darken(6%), grain, 2.3)
+  if c.corners {
+    for (cx, cy) in ((X0 + B * 0.3, Y0 + B * 0.3), (X1 - B * 0.3, Y0 + B * 0.3), (X1 - B * 0.3, Y1 - B * 0.3), (X0 + B * 0.3, Y1 - B * 0.3)) {
+      let pl = path => path
+      items += _disc(c, pl, cx, cy, 0.11 * B, c.ink.lighten(35%))
+    }
+  }
+  items
+}
+
+// torn: a strip of torn paper (a ragged outer edge, a ragged inner edge, a soft shadow); the tear is the same on opposite sides
+#let _torn(c, w, h) = {
+  let (B, m) = (_pt(c.band), _pt(c.inset))
+  let lw = _pt(c.line)
+  let nz(x, y) = {
+    let u = calc.abs(x - w / 2) + calc.abs(y - h / 2)
+    0.5 + 0.5 * (0.45 * calc.sin(u * 0.21 + 1.3) + 0.3 * calc.sin(u * 0.47 + 0.2) + 0.25 * calc.sin(u * 1.13 + 2.1))
+  }
+  let ragged(a, amp, inward) = {
+    let per = _perimeter(a, a, w - a, h - a, B * 0.2)
+    let n = int(per.length / 2.2)
+    nib.mp-path-pts(range(n).map(i => {
+      let (x, y, tx, ty) = (per.pos)(per.length * i / n)
+      let o = amp * nz(x, y) * (if inward { 1 } else { -1 })
+      _P(x - ty * o, y + tx * o)
+    }), cycle: true)
+  }
+  let paper = c.accent.lighten(78%)
+  let outer = ragged(m + 0.1 * B, 0.2 * B, true)
+  let inner = ragged(m + 0.82 * B, 0.2 * B, false)
+  let items = (nib.mp-fill(nib.shifted(outer, 1.6pt, -1.6pt), fill: black.transparentize(82%)),)
+  items.push(nib.mp-fill(outer, fill: paper))
+  items.push(nib.mp-fill(nib.shifted(inner, 1.0pt, -1.0pt), fill: black.transparentize(88%)))
+  items.push(nib.mp-fill(inner, fill: c.paper))
+  items += _stroke(inner, lw * 0.5, c.accent.lighten(25%))
+  // a fine rule inside the paper strip keeps the contour readable
+  let rr(a, rad) = nib.round-corners(((a * 1pt, a * 1pt), ((w - a) * 1pt, a * 1pt), ((w - a) * 1pt, (h - a) * 1pt), (a * 1pt, (h - a) * 1pt)), r: rad * 1pt, cycle: true)
+  items += _stroke(rr(m + 0.5 * B, B * 0.1), lw * 0.9, c.color)
+  items
+}
+
+// coil: a rounded notebook border with wire rings along the binding side (`binding: "left"`, "right", "top", "bottom" or "none")
+#let _coil(c, w, h) = {
+  let (B, m) = (_pt(c.band), _pt(c.inset))
+  let lw = _pt(c.line)
+  let r = if c.radius == auto { B * 0.6 } else { _pt(c.radius) }
+  let rr(a, rad) = nib.round-corners(((a * 1pt, a * 1pt), ((w - a) * 1pt, a * 1pt), ((w - a) * 1pt, (h - a) * 1pt), (a * 1pt, (h - a) * 1pt)), r: rad * 1pt, cycle: true)
+  let items = _stroke(rr(m + 0.3 * B, r), B * 0.34, c.color)
+  items += _stroke(rr(m + 0.02 * B, r + 0.28 * B), lw * 1.3, c.ink)
+  items += _stroke(rr(m + 0.58 * B, calc.max(r - 0.28 * B, 0.5)), lw * 1.1, c.ink)
+  items += _stroke(rr(m + 0.3 * B, r), B * 0.1, c.color.lighten(55%))
+  let side = c.binding
+  assert(side in ("left", "right", "top", "bottom", "none"), message: "nibframe: coil needs binding: \"left\", \"right\", \"top\", \"bottom\" or \"none\"")
+  if side != "none" {
+    let horizontal = side in ("top", "bottom")
+    let len = if horizontal { w } else { h }
+    let pitch = 0.95 * B
+    let n = 2 * int(calc.max(1, calc.floor((len - 2 * (m + 2 * B)) / (2 * pitch))))
+    for i in range(n) {
+      let u = (i + 0.5) / n * (len - 2 * (m + 2 * B)) + m + 2 * B
+      let (cx, cy, ang) = if side == "left" { (m + 0.4 * B, u, 0deg) } else if side == "right" { (w - m - 0.4 * B, u, 0deg) } else if side == "top" { (u, h - m - 0.4 * B, 90deg) } else { (u, m + 0.4 * B, 90deg) }
+      let col = if calc.even(i) { c.accent } else { c.color.darken(25%) }
+      let pts = range(17).map(k => {
+        let t = k * 22.5deg
+        let (x, y) = (0.85 * B * calc.cos(t), 0.21 * B * calc.sin(t))
+        let tilt = 20deg
+        let (xr, yr) = (x * calc.cos(tilt) - y * calc.sin(tilt), x * calc.sin(tilt) + y * calc.cos(tilt))
+        (cx + (if horizontal { yr } else { xr }), cy + (if horizontal { xr } else { yr }))
+      }).slice(0, 16)
+      items += _stroke(_ell(pts, cycle: true), B * 0.13, c.ink) + _stroke(_ell(pts, cycle: true), B * 0.085, col)
+    }
+  }
+  items
+}
+
 #let _new-styles = (
   stepped: _stepped, deckle: _deckle, label: _label,
   "diamond-chain": _diamond-chain, "lace-grid": _lace-grid, "diploma-shell": _diploma-shell,
@@ -1595,7 +1769,8 @@
   "knot-rope": _knot-rope, "knot-triple": _knot-triple, "knot-weave": _knot-weave, "knot-blocks": _knot-blocks,
   "knot-cartouche": _knot-cartouche, "knot-eights": _knot-eights, "knot-lozenge": _knot-lozenge, "knot-ring": _knot-ring,
   daisy: _daisy, sakura: _sakura, lotus: _lotus, palmette: _palmette, ogee: _ogee, rinceau: _rinceau,
-  girih: _girih, hexastar: _hexastar, strap: _strap)
+  girih: _girih, hexastar: _hexastar, strap: _strap,
+  dedication: _dedication, plank: _plank, torn: _torn, coil: _coil)
 
 #let _draw = (classic: _classic, celtic: _celtic, guilloche: _guilloche, braces: _braces, pearls: _pearls,
   arabesque: _arabesque, islamic: _islamic, greek: _greek, scallop: _scallop, deco: _deco, chain: _chain, braid: _braid, banknote: _banknote,

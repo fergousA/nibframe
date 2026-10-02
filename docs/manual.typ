@@ -445,6 +445,14 @@ let b(c) = frame-graphic(36mm, 24mm, style: "bill-lens", corner-color: c)
 stack(dir: ltr, spacing: 3mm, b(auto), b(rgb("#9a3324")))
 ```)
 
+#opt("binding", "binding: \"left\"",
+  T[Side of the wire rings of the `coil` style: `"left"`, `"right"`, `"top"`, `"bottom"`, or `"none"` for the border alone. The other styles ignore it.][Côté des anneaux de reliure du style `coil` : `"left"`, `"right"`, `"top"`, `"bottom"`, ou `"none"` pour la bordure seule. Les autres styles l'ignorent.],
+  params: (P("binding", "string", "\"left\"", [`"left"`, `"right"`, `"top"`, `"bottom"` or `"none"`.], [`"left"`, `"right"`, `"top"`, `"bottom"` ou `"none"`.]),),
+  ex: ```
+let b(s) = frame-graphic(30mm, 24mm, style: "coil", binding: s)
+stack(dir: ltr, spacing: 3mm, b("left"), b("top"), b("none"))
+```)
+
 == #T("Texture and seal", "Texture et sceau")
 
 #opt("texture", "texture: none",

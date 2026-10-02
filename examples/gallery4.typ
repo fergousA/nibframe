@@ -33,5 +33,9 @@
     card("deckle", color: rgb("#7a2a3a"), accent: rgb("#c9962c"), texture: "waves"),
     card("label", color: rgb("#7a2a3a"), accent: rgb("#c9962c")),
     card("filigree", color: rgb("#2c3a5a"), accent: rgb("#9aa6c8"), texture: "waves"),
+    card("dedication", color: rgb("#2c3a5a"), accent: rgb("#b07a1c")),
+    card("plank", color: rgb("#7a2a3a"), accent: rgb("#b07a1c")),
+    card("torn", color: rgb("#7a2a3a"), accent: rgb("#c9962c")),
+    card("coil", color: rgb("#d6538f"), accent: rgb("#8a5aa8")),
   )
 }

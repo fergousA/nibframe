@@ -32,7 +32,7 @@ Put the show rule first. Options go after the style:
 
 ## Styles
 
-`"classic"`, `"celtic"`, `"braid"`, `"chain"`, `"arabesque"`, `"islamic"`, `"greek"`, `"scallop"`, `"deco"`, `"braces"`, `"pearls"`, `"guilloche"`, `"banknote"`, `"baroque"`, `"triquetra"`, `"solomon"`, `"zellige"`, `"seigaiha"`, `"kilim"`, `"laurel"`, `"flowers"`, `"stamp"`, `"film"`, `"photo"`, `"neon"`, `"illumination"`, `"bill-lens"`, `"bill-fan"`, `"bill-ribbon"`, `"bill-shell"`, `"bill-wave"`, `"bill-frill"`, `"bill-net"`, `"bill-swell"`, `"bill-plait"`, `"bill-rosette"`, `"bill-wavy"`, `"bill-diploma"`, `"bill-lattice"`, `"bill-weave"`, `"airmail"`, `"checker"`, `"stars"`, `"hearts"`, `"eggdart"`, `"vitruvian"`, `"arches"`, `"tapa"`, `"stripes"`, `"herringbone"`, `"knot-cartouche"`, `"knot-eights"`, `"knot-lozenge"`, `"knot-ring"`, `"knot-rope"`, `"knot-triple"`, `"knot-weave"`, `"knot-blocks"`, `"daisy"`, `"sakura"`, `"lotus"`, `"palmette"`, `"ogee"`, `"rinceau"`, `"girih"`, `"hexastar"`, `"strap"`, `"certificate"`, `"certificate-ribbon"`, `"stepped"`, `"deckle"`, `"label"`, `"diamond-chain"`, `"lace-grid"`, `"diploma-shell"`, `"medallion"`, `"rosette-ribbon"`, `"fleur-edge"`, `"filigree"` (list: `frame-styles`).
+`"classic"`, `"celtic"`, `"braid"`, `"chain"`, `"arabesque"`, `"islamic"`, `"greek"`, `"scallop"`, `"deco"`, `"braces"`, `"pearls"`, `"guilloche"`, `"banknote"`, `"baroque"`, `"triquetra"`, `"solomon"`, `"zellige"`, `"seigaiha"`, `"kilim"`, `"laurel"`, `"flowers"`, `"stamp"`, `"film"`, `"photo"`, `"neon"`, `"illumination"`, `"bill-lens"`, `"bill-fan"`, `"bill-ribbon"`, `"bill-shell"`, `"bill-wave"`, `"bill-frill"`, `"bill-net"`, `"bill-swell"`, `"bill-plait"`, `"bill-rosette"`, `"bill-wavy"`, `"bill-diploma"`, `"bill-lattice"`, `"bill-weave"`, `"airmail"`, `"checker"`, `"stars"`, `"hearts"`, `"eggdart"`, `"vitruvian"`, `"arches"`, `"tapa"`, `"stripes"`, `"herringbone"`, `"knot-cartouche"`, `"knot-eights"`, `"knot-lozenge"`, `"knot-ring"`, `"knot-rope"`, `"knot-triple"`, `"knot-weave"`, `"knot-blocks"`, `"daisy"`, `"sakura"`, `"lotus"`, `"palmette"`, `"ogee"`, `"rinceau"`, `"girih"`, `"hexastar"`, `"strap"`, `"certificate"`, `"certificate-ribbon"`, `"stepped"`, `"deckle"`, `"label"`, `"diamond-chain"`, `"lace-grid"`, `"diploma-shell"`, `"medallion"`, `"rosette-ribbon"`, `"fleur-edge"`, `"filigree"`, `"dedication"`, `"plank"`, `"torn"`, `"coil"` (list: `frame-styles`).
 
 ![Gallery](docs/img/gallery.jpg)
 
@@ -117,6 +117,10 @@ Put the show rule first. Options go after the style:
 | `rosette-ribbon` | ribbon of hairlines pinched at regular intervals, a rosette on each pinch |
 | `fleur-edge` | scalloped outer edge, four-pointed fleurons, diamond lattice |
 | `filigree` | mirrored scrolls with leaves, dense symmetric ornament |
+| `dedication` | triple rule, a row of diamonds between the rules, rosettes with leafy sprigs in the corners and in the middle of every side (invitations, dedications) |
+| `plank` | four mitred wooden boards with grain and a nail in every corner (a picture frame made of planks) |
+| `torn` | strip of torn paper with a ragged outer and inner edge and a soft shadow (the tear is the same on opposite sides) |
+| `coil` | rounded notebook border with wire rings along one side (`binding: "left"`, `"right"`, `"top"`, `"bottom"` or `"none"`) |
 
 | Option | Meaning | Default |
 |---|---|---|
@@ -127,6 +131,7 @@ Put the show rule first. Options go after the style:
 | `paper` | colour of the page, used by the styles that hide overlaps (seigaiha, kilim, photo, baroque) | `white` |
 | `corners` | corner ornaments; `false` keeps the continuous contour and the side pattern only | `true` |
 | `corner-color` | colour of the corner rosettes of the `bill-*` styles | lighter `accent` |
+| `binding` | `coil` only: side of the wire rings (`"left"`, `"right"`, `"top"`, `"bottom"`, `"none"`) | `"left"` |
 | `texture` | background texture inside the frame: `"scales"`, `"waves"`, `"rosettes"` (any style) | `none` |
 | `texture-color` | colour of the texture | pale `accent` |
 | `seal` | a guilloché seal (rosette) in the bottom-right corner of the page | `false` |

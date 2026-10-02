@@ -79,4 +79,8 @@
   "rosette-ribbon": (en: "ribbon of hairlines pinched at regular intervals, a rosette on each pinch", fr: "ruban de filets pincé à intervalles réguliers, une rosace à chaque pincement"),
   "fleur-edge": (en: "scalloped outer edge, four-pointed fleurons, diamond lattice", fr: "bord extérieur festonné, fleurons à quatre pointes, treillis de losanges"),
   "filigree": (en: "mirrored scrolls with leaves, dense symmetric ornament", fr: "volutes en miroir avec feuilles, ornement dense et symétrique"),
+  "dedication": (en: "triple rule, a row of diamonds between the rules, rosettes with leafy sprigs in the corners and in the middle of every side (invitations, dedications)", fr: "triple filet, rangée de losanges entre les filets, rosaces à rameaux feuillus aux angles et au milieu de chaque côté (invitations, dédicaces)"),
+  "plank": (en: "four mitred wooden boards with grain and a nail in every corner (a picture frame made of planks)", fr: "quatre planches de bois assemblées en onglet, avec veines et un clou à chaque angle (un cadre fait de planches)"),
+  "torn": (en: "strip of torn paper with a ragged outer and inner edge and a soft shadow (the tear is the same on opposite sides)", fr: "bande de papier déchiré, bord extérieur et intérieur irréguliers, ombre douce (la déchirure est la même sur les côtés opposés)"),
+  "coil": (en: "rounded notebook border with wire rings along one side (`binding: \"left\"`, `\"right\"`, `\"top\"`, `\"bottom\"` or `\"none\"`)", fr: "bordure arrondie de cahier avec des anneaux de reliure sur un côté (`binding: \"left\"`, `\"right\"`, `\"top\"`, `\"bottom\"` ou `\"none\"`)"),
 )

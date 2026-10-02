@@ -117,6 +117,10 @@ Placez la règle `show` en premier. Les options suivent le style :
 | `rosette-ribbon` | ruban de filets pincé à intervalles réguliers, une rosace à chaque pincement |
 | `fleur-edge` | bord extérieur festonné, fleurons à quatre pointes, treillis de losanges |
 | `filigree` | volutes en miroir avec feuilles, ornement dense et symétrique |
+| `dedication` | triple filet, rangée de losanges entre les filets, rosaces à rameaux feuillus aux angles et au milieu de chaque côté (invitations, dédicaces) |
+| `plank` | quatre planches de bois assemblées en onglet, avec veines et un clou à chaque angle (un cadre fait de planches) |
+| `torn` | bande de papier déchiré, bord extérieur et intérieur irréguliers, ombre douce (la déchirure est la même sur les côtés opposés) |
+| `coil` | bordure arrondie de cahier avec des anneaux de reliure sur un côté (`binding: "left"`, `"right"`, `"top"`, `"bottom"` ou `"none"`) |
 
 | Option | Sens | Défaut |
 |---|---|---|
@@ -127,6 +131,7 @@ Placez la règle `show` en premier. Les options suivent le style :
 | `paper` | couleur de la page, utilisée par les styles qui masquent des recouvrements (seigaiha, kilim, photo, baroque) | `white` |
 | `corners` | ornements d'angle ; `false` ne garde que le contour continu et le motif des côtés | `true` |
 | `corner-color` | couleur des rosettes d'angle des styles `bill-*` | `accent` éclairci |
+| `binding` | `coil` seulement : côté des anneaux (`"left"`, `"right"`, `"top"`, `"bottom"`, `"none"`) | `"left"` |
 | `texture` | texture de fond à l'intérieur du cadre : `"scales"`, `"waves"`, `"rosettes"` (tous les styles) | `none` |
 | `texture-color` | couleur de la texture | `accent` pâle |
 | `seal` | un sceau de guilloché (rosace) en bas à droite de la page | `false` |
